@@ -1,0 +1,73 @@
+{
+  "name": "jiucai-ai-desktop",
+  "version": "1.0.0",
+  "description": "久财AI - 智能股票分析桌面应用",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win --x64",
+    "build:win32": "electron-builder --win --ia32",
+    "build:all": "electron-builder --win --x64 --ia32"
+  },
+  "keywords": [
+    "AI",
+    "Stock",
+    "Finance",
+    "Desktop"
+  ],
+  "author": "JiuCai AI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "marked": "^11.0.0"
+  },
+  "build": {
+    "appId": "com.jiucai.ai.desktop",
+    "productName": "久财AI",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "JiuCaiAI-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "久财AI",
+      "include": "installer.nsh"
+    },
+    "files": [
+      "**/*",
+      "!docs/**/*",
+      "!scripts/**/*",
+      "!ml_services/**/*",
+      "!data/**/*",
+      "!outputs/**/*"
+    ]
+  }
+}

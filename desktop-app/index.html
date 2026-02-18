@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>久财AI - 智能股票分析助手</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/chat.css">
+  <link rel="stylesheet" href="styles/views.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 主容器 -->
+  <div class="app-container">
+    <!-- 左侧边栏 -->
+    <aside class="sidebar">
+      <!-- 用户信息 -->
+      <div class="user-profile">
+        <div class="avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-info">
+          <div class="username">投资者</div>
+          <div class="user-status">在线</div>
+        </div>
+      </div>
+
+      <!-- 导航菜单 -->
+      <nav class="nav-menu">
+        <div class="nav-item active" data-view="chat">
+          <i class="fas fa-comments"></i>
+          <span>智能分析</span>
+        </div>
+        <div class="nav-item" data-view="market">
+          <i class="fas fa-chart-line"></i>
+          <span>市场行情</span>
+        </div>
+        <div class="nav-item" data-view="stock">
+          <i class="fas fa-chart-bar"></i>
+          <span>个股分析</span>
+        </div>
+        <div class="nav-item" data-view="portfolio">
+          <i class="fas fa-briefcase"></i>
+          <span>投资组合</span>
+        </div>
+        <div class="nav-item" data-view="strategy">
+          <i class="fas fa-lightbulb"></i>
+          <span>策略回测</span>
+        </div>
+      </nav>
+
+      <!-- 对话历史 -->
+      <div class="chat-history-section">
+        <div class="section-header">
+          <span>历史对话</span>
+          <button class="new-chat-btn" title="新对话">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+        <div class="chat-history-list" id="chatHistory">
+          <!-- 对话历史将动态加载 -->
+        </div>
+      </div>
+
+      <!-- 底部设置 -->
+      <div class="sidebar-footer">
+        <button class="settings-btn" title="设置">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 聊天视图 -->
+      <div class="view-container active" id="chatView">
+        <!-- 欢迎屏幕 -->
+        <div class="welcome-screen" id="welcomeScreen">
+          <div class="welcome-content">
+            <h1 class="welcome-title">你好，投资者！开始智能股票分析</h1>
+            <p class="welcome-subtitle">久财AI为您提供专业的股票分析和投资决策支持</p>
+            
+            <!-- 快捷功能卡片 -->
+            <div class="quick-actions">
+              <div class="action-card" data-action="market-overview">
+                <i class="fas fa-chart-line"></i>
+                <span>市场概览</span>
+              </div>
+              <div class="action-card" data-action="stock-search">
+                <i class="fas fa-search"></i>
+                <span>股票查询</span>
+              </div>
+              <div class="action-card" data-action="technical-analysis">
+                <i class="fas fa-chart-area"></i>
+                <span>技术分析</span>
+              </div>
+              <div class="action-card" data-action="news-sentiment">
+                <i class="fas fa-newspaper"></i>
+                <span>新闻舆情</span>
+              </div>
+              <div class="action-card" data-action="ai-prediction">
+                <i class="fas fa-brain"></i>
+                <span>AI预测</span>
+              </div>
+              <div class="action-card" data-action="risk-analysis">
+                <i class="fas fa-shield-alt"></i>
+                <span>风险评估</span>
+              </div>
+            </div>
+
+            <!-- 功能标签 -->
+            <div class="feature-tags">
+              <div class="tag" data-tag="macd"><i class="fas fa-wave-square"></i> MACD分析</div>
+              <div class="tag" data-tag="kdj"><i class="fas fa-chart-line"></i> KDJ指标</div>
+              <div class="tag" data-tag="ma"><i class="fas fa-chart-simple"></i> 均线系统</div>
+              <div class="tag" data-tag="volume"><i class="fas fa-bars"></i> 成交量分析</div>
+              <div class="tag" data-tag="bollinger"><i class="fas fa-arrows-alt-v"></i> 布林带</div>
+              <div class="tag" data-tag="rsi"><i class="fas fa-gauge-high"></i> RSI强弱</div>
+              <div class="tag" data-tag="support"><i class="fas fa-level-up-alt"></i> 支撑位</div>
+              <div class="tag" data-tag="resistance"><i class="fas fa-level-down-alt"></i> 压力位</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 对话区域 -->
+        <div class="chat-area" id="chatArea" style="display: none;">
+          <div class="messages-container" id="messagesContainer">
+            <!-- 消息将动态添加到这里 -->
+          </div>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-area">
+          <div class="input-container">
+            <button class="attach-btn" title="附件">
+              <i class="fas fa-paperclip"></i>
+            </button>
+            
+            <div class="input-wrapper">
+              <textarea 
+                id="messageInput" 
+                placeholder="请输入您的问题，例如：分析一下贵州茅台的走势" 
+                rows="1"
+              ></textarea>
+            </div>
+
+            <div class="input-actions">
+              <button class="voice-btn" title="语音输入">
+                <i class="fas fa-microphone"></i>
+              </button>
+              <button class="send-btn" id="sendBtn" title="发送">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- 底部工具栏 -->
+          <div class="input-toolbar">
+            <div class="toolbar-left">
+              <button class="tool-btn" id="realtimeDataBtn">
+                <i class="fas fa-sync-alt"></i>
+                <span>实时数据</span>
+              </button>
+              <button class="tool-btn" id="technicalBtn">
+                <i class="fas fa-chart-line"></i>
+                <span>技术指标</span>
+              </button>
+              <button class="tool-btn" id="newsBtn">
+                <i class="fas fa-newspaper"></i>
+                <span>相关新闻</span>
+              </button>
+            </div>
+
+            <div class="avatar-mini">
+              <i class="fas fa-user-circle"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 市场行情视图 -->
+      <div class="view-container" id="marketView">
+        <div class="market-overview">
+          <h2><i class="fas fa-chart-line"></i> 市场行情概览</h2>
+          <div class="market-indicators">
+            <div class="indicator-card">
+              <div class="indicator-label">上证指数</div>
+              <div class="indicator-value">3,125.67</div>
+              <div class="indicator-change positive">+0.89%</div>
+            </div>
+            <div class="indicator-card">
+              <div class="indicator-label">深证成指</div>
+              <div class="indicator-value">10,234.56</div>
+              <div class="indicator-change positive">+1.12%</div>
+            </div>
+            <div class="indicator-card">
+              <div class="indicator-label">创业板指</div>
+              <div class="indicator-value">2,456.78</div>
+              <div class="indicator-change positive">+1.45%</div>
+            </div>
+            <div class="indicator-card">
+              <div class="indicator-label">沪深300</div>
+              <div class="indicator-value">3,825.42</div>
+              <div class="indicator-change positive">+1.23%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 个股分析视图 -->
+      <div class="view-container" id="stockView">
+        <div class="stock-analysis">
+          <h2><i class="fas fa-chart-bar"></i> 个股分析</h2>
+          <div class="stock-search-box">
+            <input type="text" placeholder="输入股票代码或名称..." class="stock-input">
+            <button class="search-btn"><i class="fas fa-search"></i> 搜索</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 投资组合视图 -->
+      <div class="view-container" id="portfolioView">
+        <div class="portfolio-management">
+          <h2><i class="fas fa-briefcase"></i> 我的投资组合</h2>
+          <div class="portfolio-summary">
+            <p>暂无持仓数据</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 策略回测视图 -->
+      <div class="view-container" id="strategyView">
+        <div class="strategy-backtest">
+          <h2><i class="fas fa-lightbulb"></i> 策略回测</h2>
+          <div class="strategy-content">
+            <p>策略回测功能开发中...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 加载脚本 -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/chat.js"></script>
+  <script src="scripts/api.js"></script>
+</body>
+</html>
