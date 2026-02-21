@@ -303,18 +303,29 @@ npm run build:all
 
 ---
 
-### 📸 桌面应用截图
+### 📸 桌面应用界面预览
 
 <div align="center">
 
-#### 主界面 - 智能分析
-![Main Interface](https://via.placeholder.com/800x500/5B8DEE/FFFFFF?text=AI+Chat+Interface)
+#### 🎨 主界面 - 智能分析
+- 💬 AI对话窗口
+- 🎯 6大快捷功能卡片
+- 🏷️ 8种技术指标标签
+- 📝 历史记录管理
 
-#### 市场行情视图
-![Market View](https://via.placeholder.com/800x500/42b883/FFFFFF?text=Market+Overview)
+#### 📊 市场行情视图
+- 📈 四大主要指数实时展示
+- 🔄 自动刷新（5/10/30/60/300秒可选）
+- 📊 涨跌幅动态显示
+- 💰 成交额统计
 
-#### 设置界面
-![Settings](https://via.placeholder.com/800x500/FF6B6B/FFFFFF?text=Settings+Interface)
+#### ⚙️ 设置界面
+- 🎨 8大设置模块
+- 🌈 6种预设主题色
+- 🌓 深色/浅色模式切换
+- 📏 界面布局自定义
+
+> 💡 **提示**: 实际截图将在后续版本中添加
 
 </div>
 
