@@ -1,8 +1,9 @@
 /**
- * API接口模块
+ * API接口模块 - 统一API调用入口
+ * 集成多个AI提供商：豆包、OpenAI、通义千问、文心一言
  */
 
-// API配置
+// 兼容旧版API配置
 const API_CONFIG = {
   baseURL: 'http://localhost:3001/api',
   timeout: 30000,
@@ -11,10 +12,33 @@ const API_CONFIG = {
   }
 };
 
-// 调用AI API
-async function callAIAPI(message) {
+// 获取API客户端实例
+function getClient() {
+  return typeof getAPIClient === 'function' ? getAPIClient() : null;
+}
+
+// 调用AI API（主入口函数）
+async function callAIAPI(message, options = {}) {
   try {
-    // 模拟API调用 - 实际应用中替换为真实API
+    const client = getClient();
+    
+    // 如果API客户端可用且配置完整，使用真实API
+    if (client && (apiConfig.isValid() || apiConfig.currentProvider === 'mock')) {
+      console.log('使用真实API:', apiConfig.currentProvider);
+      
+      // 构建消息历史
+      const messages = options.history || [];
+      messages.push({
+        role: 'user',
+        content: message
+      });
+      
+      const response = await client.sendChatRequest(messages, options);
+      return response.content;
+    }
+    
+    // 降级到模拟响应
+    console.log('使用模拟响应（API未配置）');
     const response = await simulateAIResponse(message);
     return response;
     

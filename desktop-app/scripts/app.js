@@ -29,7 +29,25 @@ function initializeApp() {
   loadChatHistory();
   
   // 初始化市场视图
-  initMarketView();
+  if (typeof initMarket === 'function') {
+    initMarket();
+  }
+  
+  // 初始化策略回测
+  if (typeof initStrategyBacktest === 'function') {
+    initStrategyBacktest();
+  }
+  
+  // 初始化股票分析
+  if (typeof initStockAnalysis === 'function') {
+    initStockAnalysis();
+  }
+  
+  // 初始化投资组合
+  if (typeof initPortfolio === 'function') {
+    initPortfolio();
+  }
+  
   // 设置默认视图
   switchView('chat');
 }

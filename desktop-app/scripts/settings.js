@@ -3,7 +3,16 @@
  * Settings Page Logic
  */
 
-const { ipcRenderer } = require('electron');
+// Electron环境检测
+let ipcRenderer = null;
+try {
+  if (typeof require !== 'undefined') {
+    const electron = require('electron');
+    ipcRenderer = electron.ipcRenderer;
+  }
+} catch (e) {
+  console.log('非Electron环境，部分功能可能受限');
+}
 
 // 设置状态
 const SettingsState = {
@@ -13,9 +22,15 @@ const SettingsState = {
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
-  loadSettings();
-  setupEventListeners();
-  applySettings();
+  console.log('设置页面初始化...');
+  try {
+    loadSettings();
+    setupEventListeners();
+    applySettings();
+    console.log('设置页面初始化完成');
+  } catch (error) {
+    console.error('设置页面初始化失败:', error);
+  }
 });
 
 // 加载设置
@@ -98,6 +113,12 @@ function applySettingsToUI() {
   });
   document.getElementById('autoTranslate').checked = settings.autoTranslate;
 
+  // AI API配置
+  if (typeof apiConfig !== 'undefined') {
+    document.getElementById('aiProvider').value = apiConfig.currentProvider;
+    document.getElementById('apiKey').value = apiConfig.apiKey;
+  }
+  
   // 数据源设置
   document.getElementById('apiUrl').value = settings.apiUrl;
   document.getElementById('refreshRate').value = settings.refreshRate;
@@ -148,9 +169,13 @@ function setupEventListeners() {
   });
 
   // 侧边栏导航
-  document.querySelectorAll('.settings-nav .nav-item').forEach(item => {
+  const navItems = document.querySelectorAll('.settings-nav .nav-item');
+  console.log(`找到 ${navItems.length} 个导航项`);
+  navItems.forEach((item, index) => {
+    const section = item.dataset.section;
+    console.log(`设置导航项 ${index + 1}: ${section}`);
     item.addEventListener('click', () => {
-      const section = item.dataset.section;
+      console.log(`点击导航项: ${section}`);
       switchSection(section);
     });
   });
@@ -260,6 +285,48 @@ function setupEventListeners() {
     saveSettings();
   });
 
+  // AI API配置
+  if (typeof apiConfig !== 'undefined') {
+    document.getElementById('aiProvider').addEventListener('change', (e) => {
+      apiConfig.setProvider(e.target.value);
+      console.log('AI提供商已更改:', e.target.value);
+    });
+
+    document.getElementById('apiKey').addEventListener('change', (e) => {
+      apiConfig.setAPIKey(e.target.value);
+      console.log('API Key已更新');
+    });
+
+    // 测试API连接
+    const testBtn = document.getElementById('testAPIBtn');
+    if (testBtn) {
+      testBtn.addEventListener('click', async () => {
+        const statusItem = document.getElementById('apiStatusItem');
+        const statusDiv = document.getElementById('apiStatus');
+        
+        statusItem.style.display = 'flex';
+        statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在测试连接...';
+        statusDiv.className = 'api-status testing';
+        
+        try {
+          const client = getAPIClient();
+          const result = await client.testConnection();
+          
+          if (result.success) {
+            statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> 连接成功！`;
+            statusDiv.className = 'api-status success';
+          } else {
+            statusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> 连接失败: ${result.message}`;
+            statusDiv.className = 'api-status error';
+          }
+        } catch (error) {
+          statusDiv.innerHTML = `<i class="fas fa-times-circle"></i> 测试失败: ${error.message}`;
+          statusDiv.className = 'api-status error';
+        }
+      });
+    }
+  }
+  
   // 数据源设置
   document.getElementById('apiUrl').addEventListener('change', (e) => {
     SettingsState.settings.apiUrl = e.target.value;
@@ -334,15 +401,27 @@ function setupEventListeners() {
 
 // 切换设置区域
 function switchSection(sectionName) {
+  console.log('切换到设置区域:', sectionName);
   SettingsState.currentSection = sectionName;
 
   // 更新导航
   document.querySelectorAll('.settings-nav .nav-item').forEach(item => {
-    item.classList.toggle('active', item.dataset.section === sectionName);
+    const isActive = item.dataset.section === sectionName;
+    if (isActive) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
   });
 
   // 更新内容
   document.querySelectorAll('.settings-section').forEach(section => {
-    section.classList.toggle('active', section.id === sectionName);
+    const isActive = section.id === sectionName;
+    if (isActive) {
+      section.classList.add('active');
+      console.log('显示区域:', section.id);
+    } else {
+      section.classList.remove('active');
+    }
   });
 }

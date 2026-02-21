@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="styles/chat.css">
   <link rel="stylesheet" href="styles/views.css">
+  <link rel="stylesheet" href="styles/strategy.css">
+  <link rel="stylesheet" href="styles/stock.css">
+  <link rel="stylesheet" href="styles/portfolio.css">
+  <link rel="stylesheet" href="styles/market.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -183,26 +187,12 @@
         <div class="market-overview">
           <h2><i class="fas fa-chart-line"></i> 市场行情概览</h2>
           <div class="market-indicators">
-            <div class="indicator-card">
-              <div class="indicator-label">上证指数</div>
-              <div class="indicator-value">3,125.67</div>
-              <div class="indicator-change positive">+0.89%</div>
-            </div>
-            <div class="indicator-card">
-              <div class="indicator-label">深证成指</div>
-              <div class="indicator-value">10,234.56</div>
-              <div class="indicator-change positive">+1.12%</div>
-            </div>
-            <div class="indicator-card">
-              <div class="indicator-label">创业板指</div>
-              <div class="indicator-value">2,456.78</div>
-              <div class="indicator-change positive">+1.45%</div>
-            </div>
-            <div class="indicator-card">
-              <div class="indicator-label">沪深300</div>
-              <div class="indicator-value">3,825.42</div>
-              <div class="indicator-change positive">+1.23%</div>
-            </div>
+            <!-- 指数卡片将由market.js动态生成 -->
+          </div>
+          
+          <!-- 热门板块 -->
+          <div class="market-sectors">
+            <!-- 板块数据将由market.js动态生成 -->
           </div>
         </div>
       </div>
@@ -231,9 +221,146 @@
       <!-- 策略回测视图 -->
       <div class="view-container" id="strategyView">
         <div class="strategy-backtest">
-          <h2><i class="fas fa-lightbulb"></i> 策略回测</h2>
-          <div class="strategy-content">
-            <p>策略回测功能开发中...</p>
+          <h2><i class="fas fa-chart-line"></i> 策略回测</h2>
+          
+          <!-- 策略配置面板 -->
+          <div class="strategy-config-panel">
+            <div class="config-section">
+              <h3><i class="fas fa-cog"></i> 回测配置</h3>
+              
+              <div class="config-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>股票代码</label>
+                    <input type="text" id="backtest-stock" placeholder="例如: 600519" class="form-input">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>策略类型</label>
+                    <select id="strategy-type" class="form-select">
+                      <option value="ma">移动平均线策略 (MA)</option>
+                      <option value="macd">MACD 策略</option>
+                      <option value="kdj">KDJ 策略</option>
+                      <option value="rsi">RSI 策略</option>
+                      <option value="bollinger">布林带策略</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>开始日期</label>
+                    <input type="date" id="start-date" class="form-input">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>结束日期</label>
+                    <input type="date" id="end-date" class="form-input">
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>初始资金 (元)</label>
+                    <input type="number" id="initial-capital" value="100000" class="form-input">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>手续费率 (%)</label>
+                    <input type="number" id="commission-rate" value="0.03" step="0.01" class="form-input">
+                  </div>
+                </div>
+                
+                <div class="form-row strategy-params" id="strategyParams">
+                  <!-- 策略参数动态填充 -->
+                  <div class="form-group">
+                    <label>短期均线</label>
+                    <input type="number" id="param-short" value="5" class="form-input">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>长期均线</label>
+                    <input type="number" id="param-long" value="20" class="form-input">
+                  </div>
+                </div>
+                
+                <div class="form-actions">
+                  <button class="btn-primary" id="runBacktestBtn">
+                    <i class="fas fa-play"></i> 开始回测
+                  </button>
+                  <button class="btn-secondary" id="resetBacktestBtn">
+                    <i class="fas fa-redo"></i> 重置
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 回测结果面板 -->
+          <div class="backtest-results" id="backtestResults" style="display: none;">
+            <h3><i class="fas fa-chart-bar"></i> 回测结果</h3>
+            
+            <!-- 关键指标 -->
+            <div class="result-metrics">
+              <div class="metric-card">
+                <div class="metric-label">总收益率</div>
+                <div class="metric-value positive" id="totalReturn">+0%</div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-label">年化收益率</div>
+                <div class="metric-value" id="annualReturn">0%</div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-label">最大回撤</div>
+                <div class="metric-value negative" id="maxDrawdown">0%</div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-label">夏普比率</div>
+                <div class="metric-value" id="sharpeRatio">0.00</div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-label">胜率</div>
+                <div class="metric-value" id="winRate">0%</div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-label">交易次数</div>
+                <div class="metric-value" id="tradeCount">0</div>
+              </div>
+            </div>
+            
+            <!-- 收益曲线图 -->
+            <div class="result-chart">
+              <h4>收益曲线</h4>
+              <canvas id="equityCurve" width="800" height="300"></canvas>
+            </div>
+            
+            <!-- 交易记录 -->
+            <div class="trade-history">
+              <h4>交易记录</h4>
+              <div class="trade-table-wrapper">
+                <table class="trade-table">
+                  <thead>
+                    <tr>
+                      <th>日期</th>
+                      <th>操作</th>
+                      <th>价格</th>
+                      <th>数量</th>
+                      <th>金额</th>
+                      <th>手续费</th>
+                      <th>收益率</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tradeTableBody">
+                    <!-- 交易记录动态填充 -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -241,8 +368,14 @@
   </div>
 
   <!-- 加载脚本 -->
+  <script src="scripts/api-config.js"></script>
+  <script src="scripts/api-client.js"></script>
+  <script src="scripts/api.js"></script>
   <script src="scripts/app.js"></script>
   <script src="scripts/chat.js"></script>
-  <script src="scripts/api.js"></script>
+  <script src="scripts/strategy.js"></script>
+  <script src="scripts/stock.js"></script>
+  <script src="scripts/portfolio.js"></script>
+  <script src="scripts/market.js"></script>
 </body>
 </html>
