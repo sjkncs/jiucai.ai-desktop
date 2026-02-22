@@ -748,6 +748,29 @@ npm run build         # 构建生产版本
 
 ---
 
+## 📚 文档中心
+
+完整的项目文档已整理到 **[docs/](docs/)** 目录，包含20份详细文档：
+
+### 📖 核心文档
+
+- **[文档索引 INDEX.md](docs/INDEX.md)** - 完整的文档导航和查找指南
+- **[快速开始 QUICK_START_DESKTOP.md](docs/QUICK_START_DESKTOP.md)** - 桌面应用快速入门
+- **[Release发布指南 RELEASE_GUIDE.md](docs/RELEASE_GUIDE.md)** - GitHub Release完整流程
+
+### 🎯 按需查找
+
+| 需求 | 推荐文档 |
+|------|----------|
+| **使用应用** | [快速开始](docs/QUICK_START_DESKTOP.md) · [测试指南](docs/QUICK_TEST_GUIDE.md) · [API配置](docs/API_CONFIGURATION_GUIDE.md) |
+| **开发贡献** | [实现报告](docs/FINAL_IMPLEMENTATION_REPORT.md) · [构建指南](docs/BUILD_DESKTOP_APP.md) · [打包教程](docs/HOW_TO_BUILD.md) |
+| **项目发布** | [Release指南](docs/RELEASE_GUIDE.md) · [检查清单](docs/FINAL_RELEASE_CHECKLIST.md) · [发布说明](docs/RELEASE_NOTES_v1.0.0.md) |
+| **功能了解** | [功能报告](docs/FEATURE_COMPLETENESS_REPORT.md) · [策略回测](docs/STRATEGY_BACKTEST_COMPLETE.md) · [API总结](docs/API_IMPLEMENTATION_SUMMARY.md) |
+
+**查看完整文档**: [docs/INDEX.md](docs/INDEX.md) 📚
+
+---
+
 ## 📞 联系方式
 
 - **GitHub**: [@sjkncs](https://github.com/sjkncs)
