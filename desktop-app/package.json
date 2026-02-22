@@ -36,30 +36,21 @@
     "win": {
       "target": [
         {
-          "target": "nsis",
+          "target": "portable",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         },
         {
-          "target": "portable",
+          "target": "zip",
           "arch": [
             "x64"
           ]
         }
       ],
-      "icon": "assets/icon.ico",
-      "artifactName": "JiuCaiAI-${version}-${arch}.${ext}"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "perMachine": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "久财AI",
-      "include": "installer.nsh"
+      "artifactName": "JiuCaiAI-${version}-${os}-${arch}.${ext}",
+      "sign": null,
+      "signingHashAlgorithms": null
     },
     "files": [
       "**/*",
